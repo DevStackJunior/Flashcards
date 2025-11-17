@@ -14,3 +14,7 @@ router.get('/', async () => {
     hello: 'world',
   }
 })
+
+router.get('/', async ({ view }) => {
+  return view.render('home')
+})
