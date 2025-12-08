@@ -1,6 +1,6 @@
-import decks_controller from '#controllers/decks_controller'
-import users_controller from '#controllers/users_controller'
-import { errors } from '@adonisjs/core'
+import DecksController from '#controllers/decks_controller'
+import UsersController from '#controllers/users_controller'
+import FlashcardController from '#controllers/flashcards_controller'
 import router from '@adonisjs/core/services/router'
 /*
 |--------------------------------------------------------------------------
@@ -11,44 +11,56 @@ import router from '@adonisjs/core/services/router'
 |
 */
 
-// Home Router GET
-router.get('/', async ({ view }) => {
-  try {
-    const homePage = await view.render('home')
-    return homePage
-  } catch (error) {
-    if (error instanceof errors.E_ROUTE_NOT_FOUND) {
-      console.log(`${error?.name || 'Row'} not found`)
-    }
-    throw error
-  }
+router.group(() => {
+  // Route principale pour afficher tous les decks
+  router.get('latest-decks', [DecksController, 'showLatestDecks'])
+
+  // Route pour afficher un deck unique
+  router.get('deck/:id', [DecksController, 'showOneDeck'])
+
+  // Routes pour éditer/modifier un deck
+  router.get('decks/:id/edit', [DecksController, 'edit'])
+  router.put('decks/:id', [DecksController, 'update'])
+
+  // Route pour créer un deck
+  router.post('decks', [DecksController, 'create'])
+
+  // Route pour supprimer un deck
+  router.delete('decks/:id', [DecksController, 'destroy'])
+
+  // Route pour publier un deck
+  router.post('decks/:id/publish', [DecksController, 'create'])
+
+  // Routes pour les flashcards
+  router
+    .get('decks/:deckId/flashcards', [DecksController, 'getFlashcardsByDeck'])
+    .as('flashcards.index')
+
+  // Routes resource users
+  router.resource('users', UsersController).apiOnly()
 })
 
-// Ressources du deck (informations à display sur la page)
+//Données affichées seulement pour les utilisateurs connectés
+/*router
+  .group(() => {
+    router.post('/comments', [CommentsController, 'store'])
+    router.post('/evaluates', [EvaluatesController, 'store'])
+    router.put('/comments/:id', [CommentsController, 'update'])
+    router.put('/evaluates/:id', [EvaluatesController, 'update'])
+    router.delete('/comments/:id', [CommentsController, 'destroy'])
+    router.delete('/evaluates/:id', [EvaluatesController, 'destroy'])
+    router.post('/books', [BooksController, 'store'])
+    router.put('/books/:id', [BooksController, 'update'])
+    router.delete('/books/:id', [BooksController, 'destroy'])
+  })
+  .use(middleware.auth())
 
-router.resource('decks', decks_controller).only(['show', 'create', 'update'])
-
-// Récupérer tous les decks
-router.get('/decks', async ({ view }) => {
-  try {
-    const decksPage = await view.render('decks')
-    return decksPage
-  } catch (error) {
-    if (error instanceof errors.E_ROUTE_NOT_FOUND) {
-      console.log(`${error?.name || 'Row'} not found`)
-    }
-    throw error
-  }
-})
-
-// Generates route named "overview" on decks
-//router.on('/decks').render('/decks/overview')
-router.get('/users/create', [users_controller, 'create'])
-
-// Users to show up on the router
-router.on('/users').render('/users/show')
-
-/* Router.get('/users/:id', async ({ view, params }) => {
-  // Renders a view and passes dynamic data from the route parameters
-  return view.render('users/show', { userId: params.id })
-})*/
+//Utilisateur
+router
+  .group(() => {
+    router.post('register', [AuthController, 'register'])
+    router.post('login', [AuthController, 'login'])
+    router.post('logout', [AuthController, 'logout']).use(middleware.auth())
+  })
+  .prefix('user')
+*/

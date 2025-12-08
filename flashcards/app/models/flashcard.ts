@@ -19,6 +19,9 @@ export default class Flashcard extends BaseModel {
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime
 
+  @column()
+  declare deckId: number | null
+
   @belongsTo(() => Deck)
   declare public deck: BelongsTo<typeof Deck>
 }
