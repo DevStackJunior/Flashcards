@@ -1,4 +1,4 @@
-@component('components/layout', { title: 'Decks' })
+@component('components/layout', { title: 'Deck' })
   @slot('main')
     <style>
       :root {
@@ -157,8 +157,9 @@
     <div class="decks-container">
       <div class="page-header">
         <h1>
-          Liste des decks
+          Détails du deck actuel
         </h1>
+        {{ deck }}
       </div>
 
       <div class="decks-table">
