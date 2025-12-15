@@ -7,7 +7,7 @@ version: '3.3'
 services:
   db:
     image: mysql:8.0.30
-    container_name: db
+    container_name: flashcard
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: root
@@ -15,7 +15,7 @@ services:
       MYSQL_USER: db_user
       MYSQL_PASSWORD: db_user_pass
     ports:
-      - "6033:3306"
+      - '6033:3306'
     volumes:
       - dbdata:/var/lib/mysql
       - ./scripts:/docker-entrypoint-initdb.d
@@ -24,7 +24,7 @@ services:
 
   phpmyadmin:
     image: phpmyadmin:5.2.0
-    container_name: pma
+    container_name: pma_flashcard
     restart: always
     depends_on:
       - db
@@ -35,7 +35,7 @@ services:
       PMA_PASSWORD: root
       PMA_ARBITRARY: 1
     ports:
-      - "8081:80"
+      - '8081:80'
     networks:
       - mysql_network
 

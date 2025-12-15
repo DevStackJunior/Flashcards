@@ -6,41 +6,25 @@ import { dd } from '@adonisjs/core/services/dumper'
 
 export default class DecksController {
   // Affichage d'un deck unique
-  public async showOneDeck({ params, view }: HttpContext) {
+  public async showSingleDeck({ params, view }: HttpContext) {
     // Récupère le deck avec toutes ses flashcards
+
     const deck = await Deck.query()
       .preload('flashcards', (flashcardQuery) => {
-        flashcardQuery.orderBy('created_at', 'asc') // tri facultatif
+        flashcardQuery.orderBy('created_at', 'asc')
       })
       .where('id', params.id)
       .firstOrFail()
 
     // Passe l'objet deck avec ses flashcards à la vue
-    return view.render('deck', { deck })
+    return view.render('components/decks/detail', { deck })
   }
 
   // Affichage de tous les decks dans ordre décroissant
-  public async showLatestDecks({ view }: HttpContext) {
+  public async getDecksByPublishedDate({ view }: HttpContext) {
     const decks = await Deck.query().orderBy('published_date', 'desc')
 
-    return view.render('decks', { decks })
-  }
-
-  // Récupérer toutes les notes et commentaires pour ce livre
-  public async getFlashcardsByDeck({ params, response }: HttpContext) {
-    const deckId = params.id
-    dd('PAS')
-    try {
-      // Liaison des flashcards par deck
-      const flashcards = await Flashcard.query().where('deck_id', deckId)
-
-      return response.ok(flashcards)
-    } catch (error) {
-      return response.internalServerError({
-        message: 'Erreur serveur',
-        error: error.message,
-      })
-    }
+    return view.render('components/decks/list', { decks })
   }
 
   // Création d'un deck

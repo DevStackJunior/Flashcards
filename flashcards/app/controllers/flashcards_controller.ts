@@ -4,10 +4,29 @@ import { HttpContext } from '@adonisjs/core/http'
 
 export default class FlashcardsController {
   // SHOW LATEST FLASHCARDS
-  async index({ view }: HttpContext) {
-    const flashcards = await Flashcard.query().orderBy('updated_at', 'asc')
+  async index({ view, params }: HttpContext) {
+    const flashcard = await Flashcard.query().where('id', params.id).firstOrFail()
 
-    return view.render('pages/home', { flashcards })
+    return view.render('components/flashcards/detail', { flashcard })
+  }
+
+  // Récupérer toutes les notes et commentaires pour ce livre
+  public async getFlashcardsByDeck({ params, response, view }: HttpContext) {
+    const deckId = params.deck_id
+    try {
+      // Liaison des flashcards par deck
+      const flashcards = await Flashcard.query().where('deck_id', deckId)
+      /*console.log(
+        'flashcards details:',
+        flashcards.map((i) => i.toJSON())
+      )*/
+      return view.render('components/flashcards/list', { flashcards })
+    } catch (error) {
+      return response.internalServerError({
+        message: 'Erreur serveur',
+        error: error.message,
+      })
+    }
   }
 
   // CREATE A FLASHCARD
@@ -33,5 +52,5 @@ export default class FlashcardsController {
   }
 
   // DELETE A FLASHCARD
-  async destroy({ params, request }) {}
+  //async destroy({ params, request }) {}
 }

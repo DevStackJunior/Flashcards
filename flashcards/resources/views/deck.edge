@@ -155,64 +155,55 @@
     </style>
 
     <div class="decks-container">
-      <div class="page-header">
-        <h1>
-          Détails du deck actuel
-        </h1>
-        {{ deck }}
-      </div>
-
-      <div class="decks-table">
+      <h1>
+        Détails du deck actuel
+      </h1>
+      <div class="page-header decks-table">
         <table>
           <thead>
             <tr>
               <th>
-                #
+                ID
               </th>
               <th>
-                Title
+                Creation Date
               </th>
               <th>
                 Actions
               </th>
             </tr>
           </thead>
+          <tr>
+            <td>
+              {{ deck.id }}
+            </td>
+            <td>
+              {{ deck.publishedDate.toFormat('dd LLL yyyy') }}
+            </td>
+            <td>
+              <div class="actions-container">
+                <a href="" class="btn-action">
+                  Modifier
+                </a>
 
-          <tbody>
-            @each(deck in decks)
-              <tr>
-                <td>
-                  {{ deck.id }}
-                </td>
-                <td>
-                  {{ deck.title }}
-                </td>
-                <td>
-                  <div class="actions-container">
-                    <a href="{{ route('decks.edit', { id: deck.id }) }}" class="btn-action">
-                      Modifier
-                    </a>
+                <a href="" class="btn-action">
+                  Voir la liste des FlashCards
+                </a>
 
-                    <a href="{{ route('flashcards.index', { deckId: deck.id }) }}" class="btn-action">
-                      Voir la liste des FlashCards
-                    </a>
+                <a href="" class="btn-action">
+                  Créer une nouvelle FlashCard
+                </a>
 
-                    <a href="{{ route('flashcards.create', { deckId: deck.id }) }}" class="btn-action">
-                      Créer une nouvelle FlashCard
-                    </a>
+                <a href="" class="btn-action">
+                  Jouer
+                </a>
 
-                    <a href="{{ route('decks.show', { id: deck.id }) }}" class="btn-action">
-                      Jouer
-                    </a>
-
-                    <a href="{{ route('decks.publish', { id: deck.id }) }}" class="btn-action">
-                      Publier
-                    </a>
-                  </div>
-                </td>
-              </tr>
-            @endeach
-          </tbody>
+                <a href="" class="btn-action">
+                  Publier
+                </a>
+              </div>
+            </td>
+          </tr>
         </table>
       </div>
 

@@ -1,0 +1,223 @@
+@component('components/layout', { title: 'Decks' })
+  @slot('main')
+    <style>
+      :root {
+        --primary-cyan: #22d3ee;
+        --cyan-light: #67e8f9;
+        --cyan-hover: #06b6d4;
+        --gray-50: #f9fafb;
+        --gray-100: #f3f4f6;
+        --gray-200: #e5e7eb;
+        --gray-700: #374151;
+        --gray-900: #111827;
+      }
+      
+      body {
+        background-color: var(--gray-50);
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      }
+      
+      .page-header {
+        text-align: center;
+        margin-bottom: 3rem;
+        padding-top: 2rem;
+      }
+      
+      .page-header h1 {
+        font-size: 2rem;
+        font-weight: 600;
+        color: var(--gray-900);
+        margin: 0;
+      }
+      
+      .decks-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 1.5rem;
+      }
+      
+      .decks-table {
+        background: white;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      }
+      
+      .decks-table table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      
+      .decks-table thead {
+        background-color: var(--gray-100);
+        border-bottom: 2px solid var(--gray-200);
+      }
+      
+      .decks-table thead th {
+        padding: 1rem 1.5rem;
+        text-align: left;
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: var(--gray-700);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+      
+      .decks-table thead th:first-child {
+        width: 60px;
+        text-align: center;
+      }
+      
+      .decks-table tbody tr {
+        border-bottom: 1px solid var(--gray-200);
+        transition: background-color 0.2s;
+      }
+      
+      .decks-table tbody tr:last-child {
+        border-bottom: none;
+      }
+      
+      .decks-table tbody tr:hover {
+        background-color: var(--gray-50);
+      }
+      
+      .decks-table tbody td {
+        padding: 1.25rem 1.5rem;
+        color: var(--gray-900);
+      }
+      
+      .decks-table tbody td:first-child {
+        text-align: center;
+        font-weight: 500;
+        color: var(--gray-700);
+      }
+      
+      .actions-container {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+      
+      .btn-action {
+        display: inline-block;
+        padding: 0.5rem 1rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+        text-decoration: none;
+        border-radius: 6px;
+        border: 1.5px solid var(--primary-cyan);
+        background-color: white;
+        color: var(--cyan-hover);
+        transition: all 0.2s;
+        white-space: nowrap;
+      }
+      
+      .btn-action:hover {
+        background-color: var(--primary-cyan);
+        color: white;
+        transform: translateY(-1px);
+        box-shadow: 0 2px 4px rgba(34, 211, 238, 0.3);
+      }
+      
+      .btn-action:active {
+        transform: translateY(0);
+      }
+      
+      .footer {
+        text-align: center;
+        padding: 2rem 0;
+        margin-top: 3rem;
+        font-size: 0.875rem;
+        color: var(--gray-700);
+      }
+      
+      @media (max-width: 768px) {
+        .decks-table {
+          border-radius: 8px;
+        }
+      
+        .decks-table thead th,
+        .decks-table tbody td {
+          padding: 0.875rem;
+          font-size: 0.875rem;
+        }
+      
+        .btn-action {
+          font-size: 0.8125rem;
+          padding: 0.4rem 0.75rem;
+        }
+      
+        .actions-container {
+          gap: 0.4rem;
+        }
+      }
+    </style>
+
+    <div class="decks-container">
+      <div class="page-header">
+        <h1>
+          Liste des decks
+        </h1>
+      </div>
+
+      <div class="decks-table">
+        <table>
+          <thead>
+            <tr>
+              <th>
+                #
+              </th>
+              <th>
+                Last Created
+              </th>
+              <th>
+                Actions
+              </th>
+            </tr>
+          </thead>
+
+          <tbody>
+            @each(deck in decks)
+              <tr>
+                <td>
+                  {{ deck.id }}
+                </td>
+                <td>
+                  {{ deck.publishedDate.toFormat('dd LLL yyyy') }}
+                </td>
+                <td>
+                  <div class="actions-container">
+                    <a href="" class="btn-action">
+                      Modifier
+                    </a>
+
+                    <a href="" class="btn-action">
+                      Voir la liste des FlashCards
+                    </a>
+
+                    <a href="" class="btn-action">
+                      Créer une nouvelle FlashCard
+                    </a>
+
+                    <a href="" class="btn-action">
+                      Jouer
+                    </a>
+
+                    <a href="" class="btn-action">
+                      Publier
+                    </a>
+                  </div>
+                </td>
+              </tr>
+            @endeach
+          </tbody>
+        </table>
+      </div>
+
+      <div class="footer">
+        © 2024 - EPML - Il Kullar DEV - JCM
+      </div>
+    </div>
+  @endslot
+@endcomponent

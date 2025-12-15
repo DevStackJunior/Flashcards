@@ -12,10 +12,10 @@ import router from '@adonisjs/core/services/router'
 
 router.group(() => {
   // Route principale pour afficher tous les decks
-  router.get('/decks', [DecksController, 'showLatestDecks']).as('decks.index')
+  router.get('decks', [DecksController, 'getDecksByPublishedDate'])
 
   // Route pour afficher un deck unique
-  router.get('decks/:id', [DecksController, 'showOneDeck'])
+  router.get('decks/:id', [DecksController, 'showSingleDeck'])
 
   // Routes pour éditer/modifier un deck
   router.get('decks/:id/edit', [DecksController, 'edit'])
@@ -34,7 +34,7 @@ router.group(() => {
   router.post('decks/:id/publish', [DecksController, 'create'])
 
   // Routes pour les flashcards
-  router.get('decks/:id/cards', [DecksController, 'getFlashcardsByDeck']).as('flashcards.index')
+  router.get('decks/:id/cards', [FlashcardController, 'getFlashcardsByDeck']).as('flashcards.index')
 
   // Routes resource users
   router.resource('users', UsersController).apiOnly()
@@ -43,12 +43,14 @@ router.group(() => {
 router.group(() => {
   //Affichage des decks publiés
 
-  router.get('deck/details', [FlashcardController, 'index']) // Liste des flashcards
+  router.get('decks/:deck_id/flashcards', [FlashcardController, 'getFlashcardsByDeck']) // Liste des flashcards
+
+  router.get('decks/:deck_id/flashcards/:id', [FlashcardController, 'index'])
 
   router.post('flashcard/add', [FlashcardController, 'store']) // Créer une flashcard
   //router.get('/flashcards/latest', [FlashcardController, 'showLatestFlashcards']) // Voir 10 dernières flashcards
   // Route pour éditer/modifier une flashcard
   router.put('flashcard/:id/edit', [FlashcardController, 'update']) // Mettre à jour
 
-  router.delete('/:id', [FlashcardController, 'destroy']) // Supprimer
+  //router.delete('/:id', [FlashcardController, 'destroy']) // Supprimer
 })
