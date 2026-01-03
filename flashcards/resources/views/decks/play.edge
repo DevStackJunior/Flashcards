@@ -1,0 +1,343 @@
+@component('components/layout', { title: 'Jouer : ' + deck.name })
+  @slot('main')
+    <style>
+      .game-container {
+        max-width: 800px;
+        margin: 2rem auto;
+        text-align: center;
+      }
+
+      /* Progress Bar */
+      .progress-container {
+        width: 100%;
+        background-color: #e0e0e0;
+        border-radius: 8px;
+        margin-bottom: 2rem;
+        height: 10px;
+        overflow: hidden;
+      }
+      
+      .progress-bar {
+        height: 100%;
+        background-color: #00b4cc;
+        width: 0%; /* JS will update this */
+        transition: width 0.3s ease;
+      }
+
+      .progress-text {
+        text-align: right;
+        font-size: 0.9rem;
+        color: #666;
+        margin-bottom: 0.5rem;
+      }
+
+      /* Card Styling */
+      .scene {
+        width: 100%;
+        height: 400px;
+        perspective: 1000px;
+        cursor: pointer;
+        margin-bottom: 2rem;
+      }
+
+      .card {
+        width: 100%;
+        height: 100%;
+        position: relative;
+        transition: transform 0.6s;
+        transform-style: preserve-3d;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        border-radius: 16px;
+      }
+
+      .card.is-flipped {
+        transform: rotateY(180deg);
+      }
+
+      .card-face {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        backface-visibility: hidden;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 2rem;
+        background: white;
+        border-radius: 16px;
+        border: 1px solid #e0e0e0;
+      }
+
+      .card-face.card-back {
+        transform: rotateY(180deg);
+        background-color: #f9fafb;
+      }
+
+      .card-content {
+        font-size: 1.5rem;
+        line-height: 1.6;
+        color: #333;
+      }
+
+      .card-label {
+        text-transform: uppercase;
+        font-size: 0.8rem;
+        color: #999;
+        letter-spacing: 2px;
+        margin-bottom: 1rem;
+      }
+
+      /* Controls */
+      .controls {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        min-height: 60px;
+        margin-top: 3rem; /* Increased spacing */
+        position: relative;
+        z-index: 10; /* Ensure on top */
+      }
+
+      .btn-game {
+        padding: 12px 30px;
+        font-size: 1rem;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: transform 0.1s, opacity 0.2s;
+        font-weight: 600;
+      }
+
+      .btn-game:active {
+        transform: scale(0.95);
+      }
+
+      .btn-wrong {
+        background-color: #ff6b6b;
+        color: white;
+      }
+
+      .btn-right {
+        background-color: #51cf66;
+        color: white;
+      }
+
+      .btn-restart {
+        background-color: #339af0;
+        color: white;
+        text-decoration: none;
+        display: inline-block;
+      }
+
+      .btn-shuffle {
+         background-color: #fcc419;
+         color: #333;
+         padding: 8px 16px;
+         font-size: 0.9rem;
+         border-radius: 4px;
+         margin-bottom: 1rem;
+      }
+      
+      .btn-shuffle:hover {
+        background-color: #fab005;
+      }
+
+      .hidden {
+        display: none !important;
+      }
+
+      /* Results */
+      .results-container {
+        background: white;
+        padding: 3rem;
+        border-radius: 16px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      }
+
+      .score-large {
+        font-size: 3rem;
+        font-weight: bold;
+        color: #333;
+        margin: 1rem 0;
+      }
+
+    </style>
+
+    <div class="game-container" id="game-app">
+      
+      <!-- Gameplay Screen -->
+      <div id="gameplay-screen">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+           <button class="btn-game btn-shuffle" onclick="startGame()">Mélanger</button>
+           <div class="progress-text">
+             <span id="current-index">1</span> / <span id="total-count">0</span>
+           </div>
+        </div>
+        <div class="progress-container">
+          <div class="progress-bar" id="progress-bar"></div>
+        </div>
+
+        <div class="scene" id="card-scene">
+          <div class="card" id="card-element">
+            <div class="card-face card-front">
+              <div class="card-label">Question</div>
+              <div class="card-content" id="card-question"></div>
+              <small style="margin-top:20px; color:#aaa;">(Espace ou Clic pour retourner)</small>
+            </div>
+            <div class="card-face card-back">
+              <div class="card-label">Réponse</div>
+              <div class="card-content" id="card-answer"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="controls">
+          <div id="assessment-buttons" class="hidden">
+            <button class="btn-game btn-wrong" onclick="handleAnswer(false)">Je me suis trompé</button>
+            <button class="btn-game btn-right" onclick="handleAnswer(true)">J'ai trouvé</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Results Screen -->
+      <div id="results-screen" class="results-container hidden">
+        <h2>Session Terminée !</h2>
+        <div style="font-size: 1.2rem; margin-top: 1rem;">Votre score :</div>
+        <div class="score-large" id="score-display">0 / 0</div>
+        
+        <p id="feedback-message" style="margin-bottom: 2rem; color: #666;"></p>
+
+        <div class="controls">
+          <a href="{{ route('home') }}" class="btn-game btn-restart" style="background-color: #868e96;">Retour</a>
+          <button class="btn-game btn-restart" onclick="startGame()">Rejouer le deck</button>
+        </div>
+      </div>
+
+    </div>
+
+    <script>
+      // Load Data
+      const flashcards = {{{ flashcardsJson }}};
+      let currentDeck = [];
+      let currentIndex = 0;
+      let score = 0;
+      let isFlipped = false;
+
+      // Elements
+      const app = document.getElementById('game-app');
+      const gameplayScreen = document.getElementById('gameplay-screen');
+      const resultsScreen = document.getElementById('results-screen');
+      const cardElement = document.getElementById('card-element');
+      const cardScene = document.getElementById('card-scene');
+      const cardQuestion = document.getElementById('card-question');
+      const cardAnswer = document.getElementById('card-answer');
+      const progressBar = document.getElementById('progress-bar');
+      const currentIndexSpan = document.getElementById('current-index');
+      const totalCountSpan = document.getElementById('total-count');
+      const assessmentButtons = document.getElementById('assessment-buttons');
+      const scoreDisplay = document.getElementById('score-display');
+      const feedbackMessage = document.getElementById('feedback-message');
+
+      function startGame() {
+        // Reset state
+        currentDeck = [...flashcards];
+        shuffleArray(currentDeck);
+        currentIndex = 0;
+        score = 0;
+        isFlipped = false;
+
+        gameplayScreen.classList.remove('hidden');
+        resultsScreen.classList.add('hidden');
+        cardElement.classList.remove('is-flipped');
+        assessmentButtons.classList.add('hidden');
+        
+        totalCountSpan.textContent = currentDeck.length;
+        renderCard();
+      }
+
+      function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [array[i], array[j]] = [array[j], array[i]];
+        }
+      }
+
+      function renderCard() {
+        if (currentIndex >= currentDeck.length) {
+          showResults();
+          return;
+        }
+
+        const card = currentDeck[currentIndex];
+        cardQuestion.textContent = card.question;
+        cardAnswer.textContent = card.answer; // Model uses 'answer'
+
+        // Update Progress
+        currentIndexSpan.textContent = currentIndex + 1;
+        const progress = ((currentIndex) / currentDeck.length) * 100;
+        progressBar.style.width = ((currentIndex) / currentDeck.length) * 100 + '%';
+
+        // Reset Flip
+        isFlipped = false;
+        cardElement.classList.remove('is-flipped');
+        assessmentButtons.classList.add('hidden');
+      }
+
+      function flipCard() {
+        if (resultsScreen.classList.contains('hidden') === false) return;
+        if (isFlipped) return; // Already flipped
+
+        isFlipped = true;
+        cardElement.classList.add('is-flipped');
+        assessmentButtons.classList.remove('hidden');
+      }
+
+      function handleAnswer(correct) {
+        if (correct) score++;
+        
+        currentIndex++;
+        
+        // Update bar to full relative to previous
+        progressBar.style.width = ((currentIndex) / currentDeck.length) * 100 + '%';
+
+        if (currentIndex < currentDeck.length) {
+          // Small delay for smooth transition? 
+          // Current logic: Immediate next card.
+          // To make it smooth, maybe unflip first? 
+          // Let's just render next.
+          setTimeout(() => {
+             renderCard();
+          }, 300);
+        } else {
+          showResults();
+        }
+      }
+
+      function showResults() {
+        gameplayScreen.classList.add('hidden');
+        resultsScreen.classList.remove('hidden');
+        scoreDisplay.textContent = `${score} / ${currentDeck.length}`;
+        
+        const percentage = (score / currentDeck.length) * 100;
+        if (percentage === 100) feedbackMessage.textContent = "Parfait ! Maîtrise totale.";
+        else if (percentage >= 75) feedbackMessage.textContent = "Excellent travail !";
+        else if (percentage >= 50) feedbackMessage.textContent = "Bien, continuez ainsi.";
+        else feedbackMessage.textContent = "Courage, ça va venir !";
+      }
+
+      // Event Listeners
+      cardScene.addEventListener('click', flipCard);
+      
+      document.addEventListener('keydown', (e) => {
+        if (e.code === 'Space') {
+          e.preventDefault();
+          flipCard();
+        }
+      });
+
+      startGame();
+
+    </script>
+  @endslot
+@endcomponent

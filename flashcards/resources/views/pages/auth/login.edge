@@ -2,30 +2,18 @@
   <div class="auth-container">
     <div class="auth-card">
       <div class="auth-header">
-        <h3>
-          Se connecter
-        </h3>
-        <p>
-          Bienvenue ! Connectez-vous pour continuer.
-        </p>
+        <h3>Se connecter</h3>
+        <p>Bienvenue ! Connectez-vous pour continuer.</p>
       </div>
 
       <form action="{{ route('auth.login.store') }}" method="POST">
         {{ csrfField() }}
+        
         <div class="form-group">
           <label for="email" class="form-label">Email</label>
-          <input
-            type="email"
-            name="email"
-            id="email"
-            class="form-input"
-            value="{{ old('email') || '' }}"
-            required
-          />
+          <input type="email" name="email" id="email" class="form-input" value="{{ old('email') || '' }}" required />
           @inputError('email')
-            <p class="text-danger">
-              {{ $messages.join(', ') }}
-            </p>
+            <p class="text-danger">{{ $messages.join(', ') }}</p>
           @end
         </div>
 
@@ -33,9 +21,7 @@
           <label for="password" class="form-label">Mot de passe</label>
           <input type="password" name="password" id="password" class="form-input" required />
           @inputError('password')
-            <p class="text-danger">
-              {{ $messages.join(', ') }}
-            </p>
+            <p class="text-danger">{{ $messages.join(', ') }}</p>
           @end
         </div>
 
@@ -43,9 +29,7 @@
       </form>
 
       <div class="auth-links">
-        <p>
-          Vous n'avez pas de compte ? <a href="{{ route('auth.register.show') }}">Inscrivez-vous</a>
-        </p>
+        <p>Vous n'avez pas de compte ? <a href="{{ route('auth.register.show') }}">Inscrivez-vous</a></p>
       </div>
     </div>
   </div>

@@ -1,0 +1,18 @@
+@component('components/layout', { title: 'Modifier une flashcard' })
+  <div class="auth-container">
+    <div class="auth-card">
+      <div class="auth-header">
+        <h3>Modifier la Flashcard</h3>
+        <p>Mettez à jour la question ou la réponse.</p>
+      </div>
+
+      <form action="{{ route('flashcards.update', { id: flashcard.id }) }}?_method=PUT" method="POST">
+        @include('flashcards/form')
+      </form>
+
+      <div class="auth-links">
+        <a href="{{ route('flashcards.index', { deck_id: flashcard.deckId }) }}">Retour à la liste</a>
+      </div>
+    </div>
+  </div>
+@endcomponent

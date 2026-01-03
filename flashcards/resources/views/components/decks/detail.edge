@@ -1,215 +1,62 @@
-@component('components/layout', { title: 'Deck' })
-  @slot('main')
-    <style>
-      :root {
-        --primary-cyan: #22d3ee;
-        --cyan-light: #67e8f9;
-        --cyan-hover: #06b6d4;
-        --gray-50: #f9fafb;
-        --gray-100: #f3f4f6;
-        --gray-200: #e5e7eb;
-        --gray-700: #374151;
-        --gray-900: #111827;
-      }
-      
-      body {
-        background-color: var(--gray-50);
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-      }
-      
-      .page-header {
-        text-align: center;
-        margin-bottom: 3rem;
-        padding-top: 2rem;
-      }
-      
-      .page-header h1 {
-        font-size: 2rem;
-        font-weight: 600;
-        color: var(--gray-900);
-        margin: 0;
-      }
-      
-      .decks-container {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 0 1.5rem;
-      }
-      
-      .decks-table {
-        background: white;
-        border-radius: 12px;
-        overflow: hidden;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-      }
-      
-      .decks-table table {
-        width: 100%;
-        border-collapse: collapse;
-      }
-      
-      .decks-table thead {
-        background-color: var(--gray-100);
-        border-bottom: 2px solid var(--gray-200);
-      }
-      
-      .decks-table thead th {
-        padding: 1rem 1.5rem;
-        text-align: left;
-        font-size: 0.875rem;
-        font-weight: 600;
-        color: var(--gray-700);
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-      }
-      
-      .decks-table thead th:first-child {
-        width: 60px;
-        text-align: center;
-      }
-      
-      .decks-table tbody tr {
-        border-bottom: 1px solid var(--gray-200);
-        transition: background-color 0.2s;
-      }
-      
-      .decks-table tbody tr:last-child {
-        border-bottom: none;
-      }
-      
-      .decks-table tbody tr:hover {
-        background-color: var(--gray-50);
-      }
-      
-      .decks-table tbody td {
-        padding: 1.25rem 1.5rem;
-        color: var(--gray-900);
-      }
-      
-      .decks-table tbody td:first-child {
-        text-align: center;
-        font-weight: 500;
-        color: var(--gray-700);
-      }
-      
-      .actions-container {
-        display: flex;
-        gap: 0.5rem;
-        flex-wrap: wrap;
-        align-items: center;
-      }
-      
-      .btn-action {
-        display: inline-block;
-        padding: 0.5rem 1rem;
-        font-size: 0.875rem;
-        font-weight: 500;
-        text-decoration: none;
-        border-radius: 6px;
-        border: 1.5px solid var(--primary-cyan);
-        background-color: white;
-        color: var(--cyan-hover);
-        transition: all 0.2s;
-        white-space: nowrap;
-      }
-      
-      .btn-action:hover {
-        background-color: var(--primary-cyan);
-        color: white;
-        transform: translateY(-1px);
-        box-shadow: 0 2px 4px rgba(34, 211, 238, 0.3);
-      }
-      
-      .btn-action:active {
-        transform: translateY(0);
-      }
-      
-      .footer {
-        text-align: center;
-        padding: 2rem 0;
-        margin-top: 3rem;
-        font-size: 0.875rem;
-        color: var(--gray-700);
-      }
-      
-      @media (max-width: 768px) {
-        .decks-table {
-          border-radius: 8px;
-        }
-      
-        .decks-table thead th,
-        .decks-table tbody td {
-          padding: 0.875rem;
-          font-size: 0.875rem;
-        }
-      
-        .btn-action {
-          font-size: 0.8125rem;
-          padding: 0.4rem 0.75rem;
-        }
-      
-        .actions-container {
-          gap: 0.4rem;
-        }
-      }
-    </style>
+@component('components/layout', { title: 'Détails du deck' })
+  <div class="container">
+    <div class="auth-links" style="margin-bottom: 20px; text-align: left;">
+      <a href="{{ route('home') }}">
+        <i class="fas fa-arrow-left"></i> Retour aux decks
+      </a>
+    </div>
 
-    <div class="decks-container">
-      <h1>
-        Détails du deck actuel
-      </h1>
-      <div class="page-header decks-table">
-        <table>
-          <thead>
-            <tr>
-              <th>
-                ID
-              </th>
-              <th>
-                Creation Date
-              </th>
-              <th>
-                Actions
-              </th>
-            </tr>
-          </thead>
-          <tr>
-            <td>
-              {{ deck.id }}
-            </td>
-            <td>
-              {{ deck.publishedDate.toFormat('dd LLL yyyy') }}
-            </td>
-            <td>
-              <div class="actions-container">
-                <a href="" class="btn-action">
-                  Modifier
-                </a>
+    <div class="card" style="max-width: 800px; margin: 0 auto;">
+      <div class="card-body" style="padding: 2rem;">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 2rem;">
+          <div>
+            <h1 class="section-title" style="margin-bottom: 0.5rem;">{{ deck.name }}</h1>
+            <p class="text-muted">
+              {{ deck.publishedDate ? 'Publié le ' + deck.publishedDate.toFormat('dd LLL yyyy') : 'Brouillon' }}
+              @if(deck.isPublic)
+                <span class="badge badge-public" style="margin-left: 10px;">Public</span>
+              @end
+            </p>
+          </div>
+          <div style="text-align: right;">
+            <p class="text-muted" style="margin-bottom: 0.5rem;">ID: {{ deck.id }}</p>
+          </div>
+        </div>
 
-                <a href="" class="btn-action">
-                  Voir la liste des FlashCards
-                </a>
+        <div class="actions-container" style="display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 2rem;">
+          <a href="{{ route('decks.play', { id: deck.id }) }}" class="btn-primary" style="text-decoration: none;">
+            <i class="fas fa-play"></i> Jouer
+          </a>
 
-                <a href="" class="btn-action">
-                  Créer une nouvelle FlashCard
-                </a>
+          @if(auth.user && (auth.user.id == deck.userId || auth.user.isAdmin))
 
-                <a href="" class="btn-action">
-                  Jouer
-                </a>
+            <a href="{{ route('flashcards.index', { deck_id: deck.id }) }}" class="btn-outline">
+              <i class="fas fa-layer-group"></i> Voir les cartes
+            </a>
 
-                <a href="" class="btn-action">
-                  Publier
-                </a>
-              </div>
-            </td>
-          </tr>
-        </table>
-      </div>
+            <a href="{{ route('flashcards.create', { deck_id: deck.id }) }}" class="btn-outline">
+              <i class="fas fa-plus"></i> Ajouter une carte
+            </a>
+            <a href="{{ route('decks.edit', { id: deck.id }) }}" class="btn-outline">
+              <i class="fas fa-edit"></i> Modifier
+            </a>
+          @endif
 
-      <div class="footer">
-        © 2024 - EPML - Il Kullar DEV - JCM
+          @if(auth.user && (auth.user.id == deck.userId || auth.user.isAdmin) && !deck.isPublic)
+            <form action="{{ route('decks.publish', { id: deck.id }) }}" method="POST" style="display:inline;">
+              {{ csrfField() }}
+              <button type="submit" class="btn-outline" style="cursor:pointer;">
+                <i class="fas fa-globe"></i> Publier
+              </button>
+            </form>
+          @endif
+        </div>
+
+        <div>
+          <h3 class="card-title">Aperçu</h3>
+          <p class="text-muted">Ce deck contient {{ deck.flashcards.length }} cartes.</p>
+        </div>
       </div>
     </div>
-  @endslot
+  </div>
 @endcomponent

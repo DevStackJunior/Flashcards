@@ -2,47 +2,26 @@
   <div class="auth-container">
     <div class="auth-card">
       <div class="auth-header">
-        <h3>
-          S'inscrire
-        </h3>
-        <p>
-          Créer un compte pour commencer.
-        </p>
+        <h3>S'inscrire</h3>
+        <p>Créer un compte pour commencer.</p>
       </div>
 
       <form action="{{ route('auth.register.store') }}" method="POST">
         {{ csrfField() }}
+        
         <div class="form-group">
           <label for="pseudo" class="form-label">Pseudo</label>
-          <input
-            type="text"
-            name="pseudo"
-            id="pseudo"
-            class="form-input"
-            value="{{ old('pseudo') || '' }}"
-            required
-          />
+          <input type="text" name="pseudo" id="pseudo" class="form-input" value="{{ old('pseudo') || '' }}" required />
           @inputError('pseudo')
-            <p class="text-danger">
-              {{ $messages.join(', ') }}
-            </p>
+            <p class="text-danger">{{ $messages.join(', ') }}</p>
           @end
         </div>
 
         <div class="form-group">
           <label for="email" class="form-label">Email</label>
-          <input
-            type="email"
-            name="email"
-            id="email"
-            class="form-input"
-            value="{{ old('email') || '' }}"
-            required
-          />
+          <input type="email" name="email" id="email" class="form-input" value="{{ old('email') || '' }}" required />
           @inputError('email')
-            <p class="text-danger">
-              {{ $messages.join(', ') }}
-            </p>
+            <p class="text-danger">{{ $messages.join(', ') }}</p>
           @end
         </div>
 
@@ -50,9 +29,7 @@
           <label for="password" class="form-label">Mot de passe</label>
           <input type="password" name="password" id="password" class="form-input" required />
           @inputError('password')
-            <p class="text-danger">
-              {{ $messages.join(', ') }}
-            </p>
+            <p class="text-danger">{{ $messages.join(', ') }}</p>
           @end
         </div>
 
@@ -60,9 +37,7 @@
       </form>
 
       <div class="auth-links">
-        <p>
-          Vous avez déjà un compte ? <a href="{{ route('auth.login.show') }}">Connectez-vous</a>
-        </p>
+        <p>Vous avez déjà un compte ? <a href="{{ route('auth.login.show') }}">Connectez-vous</a></p>
       </div>
     </div>
   </div>

@@ -1,0 +1,18 @@
+<div>
+  <label for="{{ name }}">{{ label }}</label>
+  <input
+    type="{{ type || 'text' }}"
+    name="{{ name }}"
+    id="{{ name }}"
+    value="{{ value || '' }}"
+    placeholder="{{ placeholder || label }}"
+    {{ required ? 'required' : '' }}
+  />
+  @inputError(name)
+    @each(message in $messages)
+      <p class="text-danger">
+        {{ message }}
+      </p>
+    @end
+  @end
+</div>

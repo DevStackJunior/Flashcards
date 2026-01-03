@@ -1,27 +1,27 @@
-<header class="{{ config.colorScheme }}">
-  <div class="container-header">
-    <div class="titre-header">
-      <h1>
-        title
-      </h1>
-    </div>
-    <div class="" style="">
-      <nav>
-        @each(item in config.menu)
-          <a href="{{ item.url }}">{{ item.label }}</a>
-        @endeach
-      </nav>
-      <div class="login-container">
-        <form action="#" method="post">
-          <label for="user"></label>
-          <input type="text" name="user" id="user" placeholder="Login" />
-          <label for="password"></label>
-          <input type="password" name="password" id="password" placeholder="Mot de passe" />
-          <button type="submit" class="btn btn-login">
-            Se connecter
-          </button>
+<header>
+  <nav class="navbar">
+      <a href="{{ route('home') }}" class="navbar-brand">
+        Flashcards
+      </a>
+
+    <div class="navbar-nav">
+      <a href="{{ route('home') }}" class="navbar-link">Accueil</a>
+      @if(auth.user)
+        <a href="{{ route('decks.create') }}" class="navbar-link">Ajouter un deck</a>
+      @endif
+
+      @if(auth.user)
+        <span class="text-muted" style="margin: 0 10px;">{{ auth.user.pseudo }}</span>
+        <form action="{{ route('auth.logout') }}" method="POST" style="margin: 0;">
+          {{ csrfField() }}
+          <button type="submit" class="btn-primary btn-sm">Se déconnecter</button>
         </form>
-      </div>
+      @else
+        <div style="display: flex; gap: 10px;">
+          <a href="{{ route('auth.login.show') }}" class="navbar-link">Se connecter</a>
+          <a href="{{ route('auth.register.show') }}" class="btn-primary btn-sm" style="text-decoration: none;">S'inscrire</a>
+        </div>
+      @end
     </div>
-  </div>
+  </nav>
 </header>

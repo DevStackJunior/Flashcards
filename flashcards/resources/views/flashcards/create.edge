@@ -1,0 +1,15 @@
+@component('components/layout', { title: 'Ajouter une flashcard' })
+  <div class="auth-container">
+    <div class="auth-card">
+      <div class="auth-header">
+        <h3>Nouvelle Flashcard</h3>
+        <p>Ajoutez une question et une réponse.</p>
+      </div>
+
+      <form action="{{ route('flashcards.store', { deck_id: deck.id }) }}" method="POST">
+        <input type="hidden" name="deck_id" value="{{ deck.id }}">
+        @include('flashcards/form')
+      </form>
+    </div>
+  </div>
+@endcomponent

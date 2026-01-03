@@ -1,0 +1,18 @@
+@component('components/layout', { title: 'Modifier un deck' })
+  <div class="auth-container">
+    <div class="auth-card">
+      <div class="auth-header">
+        <h3>Modifier le Deck</h3>
+        <p>{{ deck.name }}</p>
+      </div>
+
+      <form action="{{ route('decks.update', { id: deck.id }) }}?_method=PUT" method="POST">
+        @include('decks/form')
+      </form>
+
+      <div class="auth-links">
+        <a href="{{ route('home') }}">Retour à la liste</a>
+      </div>
+    </div>
+  </div>
+@endcomponent

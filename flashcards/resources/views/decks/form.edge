@@ -1,0 +1,10 @@
+{{ csrfField() }}
+<div class="form-group">
+  <label for="name" class="form-label">Nom du deck</label>
+  <input type="text" name="name" id="name" class="form-input" value="{{ old('name') || (deck ? deck.name : '') }}" required />
+  @inputError('name')
+    <p class="text-danger">{{ $messages.join(', ') }}</p>
+  @end
+</div>
+
+<button type="submit" class="btn-primary">Enregistrer</button>

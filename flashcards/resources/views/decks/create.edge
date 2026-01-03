@@ -1,0 +1,18 @@
+@component('components/layout', { title: 'Ajouter un deck' })
+  <div class="auth-container">
+    <div class="auth-card">
+      <div class="auth-header">
+        <h3>Nouveau Deck</h3>
+        <p>Créez une nouvelle collection de cartes.</p>
+      </div>
+
+      <form action="{{ route('decks.store') }}" method="POST">
+        @include('decks/form')
+      </form>
+      
+      <div class="auth-links">
+        <a href="{{ route('home') }}">Retour à la liste</a>
+      </div>
+    </div>
+  </div>
+@endcomponent

@@ -1,81 +1,46 @@
 @component('components/layout', { title: 'Accueil' })
-  <h3>
-    Liste des decks
-  </h3>
-  <form action="#" method="post">
-    <table>
-      <thead>
-        <tr>
-          <th>
-            Titre
-          </th>
-          <th>
-            Date de Publication
-          </th>
-          <th>
-            Options
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>
-            Girardet Alain
-          </td>
-          <td>
-            AGT
-          </td>
-          <td class="containerOptions">
-            <a href="#">
-              <img height="20em" src="./img/edit.png" alt="edit" />
+  <div class="header-actions">
+    <h3 class="section-title">Mes Decks</h3>
+    @if(auth.user)
+      <a href="{{ route('decks.create') }}" class="btn-primary">Nouveau Deck</a>
+    @endif
+  </div>
+
+  @if(decks.length === 0)
+    <div class="alert alert-info">
+      Vous n'avez aucun deck pour le moment. Créez-en un pour commencer !
+    </div>
+  @else
+    <div class="grid">
+      @each(deck in decks)
+        <div class="card">
+          <div class="card-body">
+            <h4 class="card-title">{{ deck.name }}</h4>
+            <p class="card-meta">
+              {{ deck.publishedDate ? 'Publié le ' + deck.publishedDate.toFormat('dd/MM/yyyy') : 'Brouillon' }}
+              @if(deck.isPublic)
+                <span class="badge badge-public">Public</span>
+              @end
+            </p>
+          </div>
+          <div class="card-actions">
+            <a href="{{ route('decks.showSingleDeck', { id: deck.id }) }}" class="btn-icon" title="Détails">
+              <i class="fas fa-info-circle"></i>
             </a>
-            <a href="javascript:confirmDelete()">
-              <img height="28em" src="resources/img/bin.png" alt="delete" />
-            </a>
-            <a href="detailTeacher.html">
-              <img height="20em" src="./img/detail.png" alt="detail" />
-            </a>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            Mveng Antoine
-          </td>
-          <td>
-            AMG
-          </td>
-          <td class="containerOptions">
-            <a href="#">
-              <img height="20em" src="./img/edit.png" alt="edit" />
-            </a>
-            <a href="javascript:confirmDelete()">
-              <img height="28em" src="resources/img/bin.png" alt="delete" />
-            </a>
-            <a href="#">
-              <img height="20em" src="./img/detail.png" alt="detail" />
-            </a>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            Charmier Grégory
-          </td>
-          <td>
-            GregLeBarbar
-          </td>
-          <td class="containerOptions">
-            <a href="#">
-              <img height="20em" src="resources/img/edit.png" alt="edit" />
-            </a>
-            <a href="javascript:confirmDelete()">
-              <img height="28em" src="resources/img/bin.png" alt="delete" />
-            </a>
-            <a href="#">
-              <img height="20em" src="resources/img/detail.png" alt="detail" />
-            </a>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </form>
+            @if(auth.user && (auth.user.isAdmin || auth.user.id == deck.userId))
+              <a href="{{ route('decks.edit', { id: deck.id }) }}" class="btn-icon" title="Modifier">
+                <i class="fas fa-edit"></i>
+              </a>
+              <form action="{{ route('decks.destroy', { id: deck.id }) }}?_method=DELETE" method="POST" onsubmit="return confirm('Voulez-vous vraiment supprimer ce deck ?');" style="display:inline;">
+                {{ csrfField() }}
+                <button type="submit" class="btn-icon delete" title="Supprimer">
+                  <i class="fas fa-trash-alt"></i>
+                </button>
+              </form>
+            @endif
+          </div>
+        </div>
+      @end
+    </div>
+  @endif
 @endcomponent

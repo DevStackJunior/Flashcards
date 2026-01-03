@@ -1,0 +1,46 @@
+@component('components/layout', { title: 'Liste des flashcards' })
+  <div class="header-actions">
+    <div>
+       <h3 class="section-title">Flashcards</h3>
+       <p class="text-muted">Deck: {{ deck.name }}</p>
+    </div>
+   
+    <div>
+      <a href="{{ route('home') }}" class="btn-outline" style="margin-right: 10px;">Retour</a>
+      @if(auth.user && (auth.user.isAdmin || auth.user.id === deck.userId))
+        <a href="{{ route('flashcards.create', { deck_id: deck.id }) }}" class="btn-primary">Ajouter une carte</a>
+      @endif
+    </div>
+  </div>
+
+  @if(flashcards.length === 0)
+    <div class="alert alert-info">
+      Ce deck ne contient aucune carte pour le moment.
+    </div>
+  @else
+    <div class="list-group">
+      @each(card in flashcards)
+        <div class="list-item">
+          <div class="list-content">
+            <h4 class="list-title">{{ card.question }}</h4>
+            <p class="list-subtitle">{{ card.answer }}</p>
+          </div>
+          
+          @if(auth.user && (auth.user.isAdmin || auth.user.id === deck.userId))
+            <div class="card-actions">
+              <a href="{{ route('flashcards.edit', { id: card.id }) }}" class="btn-icon" title="Modifier">
+                <i class="fas fa-edit"></i>
+              </a>
+              <form action="{{ route('flashcards.destroy', { id: card.id }) }}?_method=DELETE" method="POST" onsubmit="return confirm('Voulez-vous vraiment supprimer cette carte ?');" style="display:inline;">
+                {{ csrfField() }}
+                <button type="submit" class="btn-icon delete" title="Supprimer">
+                  <i class="fas fa-trash-alt"></i>
+                </button>
+              </form>
+            </div>
+          @endif
+        </div>
+      @end
+    </div>
+  @endif
+@endcomponent
