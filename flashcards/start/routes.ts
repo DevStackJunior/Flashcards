@@ -9,7 +9,7 @@ import router from '@adonisjs/core/services/router'
 | The routes file is used for defining the HTTP routes.
 |
 */
-
+import { middleware } from '#start/kernel'
 import AuthController from '#controllers/auth_controller'
 
 router.group(() => {
@@ -30,3 +30,22 @@ router.group(() => {
   // Liste flashcards d'un deck
   router.get('decks/:deck_id/cards', [FlashcardController, 'index']).as('flashcards.index')
 })
+
+router
+  .group(() => {
+    router.get('decks/add', [DecksController, 'create']).as('decks.create')
+    router.post('decks/add', [DecksController, 'store']).as('decks.store')
+    router.get('decks/:id/edit', [DecksController, 'edit']).as('decks.edit')
+    router.put('decks/:id', [DecksController, 'update']).as('decks.update')
+    router.delete('decks/:id', [DecksController, 'destroy']).as('decks.destroy')
+    router.post('decks/:id/publish', [DecksController, 'publish']).as('decks.publish')
+
+    router
+      .get('decks/:deck_id/cards/create', [FlashcardController, 'create'])
+      .as('flashcards.create')
+    router.post('decks/:deck_id/cards', [FlashcardController, 'store']).as('flashcards.store')
+    router.get('flashcards/:id/edit', [FlashcardController, 'edit']).as('flashcards.edit')
+    router.put('flashcards/:id', [FlashcardController, 'update']).as('flashcards.update')
+    router.delete('flashcards/:id', [FlashcardController, 'destroy']).as('flashcards.destroy')
+  })
+  .use(middleware.auth())
