@@ -20,7 +20,6 @@ export default class FlashcardsController {
       session.flash('error', "Vous n'avez pas la permission de modifier ce deck.")
       return response.redirect().toRoute('home')
     }
-
     return view.render('flashcards/create', { deck })
   }
 
