@@ -25,7 +25,7 @@ jobs:
 
       - name: npm install, build, and test
         run: |
-          cd /flashcards
+          cd ./flashcards
           npm install
           node ace build --ignore-ts-errors
           # npm run test --if-present
@@ -54,3 +54,4 @@ jobs:
           slot-name: 'Production'
           package: .
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_401CB8D4E9CA4C449305922904BDF41E }}
+
