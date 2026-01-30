@@ -34,6 +34,7 @@ jobs:
         with:
           name: node-app
           path: ./flashcards/build
+          include-hidden-files: true
 
   deploy:
     runs-on: ubuntu-latest
@@ -53,6 +54,7 @@ jobs:
           slot-name: 'Production'
           package: .
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_401CB8D4E9CA4C449305922904BDF41E }}
+
 
 
 
