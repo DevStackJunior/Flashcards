@@ -27,13 +27,13 @@ jobs:
         run: |
           cd ./flashcards
           npm install
-          npm run build --ignore-ts-errors
+          node ace build --ignore-ts-errors
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: node-app
-          path: build
+          path: ./flashcards/build
 
   deploy:
     runs-on: ubuntu-latest
@@ -53,6 +53,7 @@ jobs:
           slot-name: 'Production'
           package: .
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_401CB8D4E9CA4C449305922904BDF41E }}
+
 
 
 
