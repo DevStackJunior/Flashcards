@@ -52,3 +52,15 @@ cd app-flashcards-adonisjs
 
 # Install dependencies
 npm install
+
+# Create your local environment file:
+cp .env.example .env
+
+# Generate your unique application key:
+node ace generate:key
+
+# Ensure your MySQL instance is running, then run the migrations to build your schema:
+node ace migration:run
+
+# This project uses Hot Module Replacement (HMR) for an optimized development loop:
+npm run dev
